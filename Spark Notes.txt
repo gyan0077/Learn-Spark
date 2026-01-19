@@ -1,0 +1,210 @@
+========================== What is Spark.
+Spark usually refers to Apache Spark, A powerful distributed data processing engine used to handle large-scale data quickly and efficiently.
+
+========================== What is Apache Spark?
+Apache Spark is an open-source framework designed to process big data across clusters of computers. It is much faster than traditional systems like Hadoop MapReduce because it performs most computations in memory instead of repeatedly reading from disk.
+
+========================== High-Level Spark Architecture
+Client
+  |
+Spark Driver (Driver Program)
+  |
+Cluster Manager
+  |
+Executors (on Worker Nodes)
+
+
+1: Spark Driver- Brain of the Job
+Responsibilities:
+Converts your code into a DAG (Directed Acyclic Graph)
+Splits DAG into stages and tasks
+Schedules tasks on executors
+Tracks job progress & failures
+📌 If the driver dies → job fails
+
+
+2: Cluster Manager -- (Resource Manager)
+The Cluster Manager allocates CPU & memory for Spark.
+Spark supports:
+YARN
+Kubernetes
+Spark Standalone
+📌 Spark itself does not manage resources — cluster manager does.
+
+3: Worker Nodes
+Machines in the cluster that actually run the work.
+Each worker hosts: One or more Executors
+
+4: Executors (Workhorses)
+Executors are JVM processes launched on worker nodes.
+
+Responsibilities:
+Execute tasks
+Store data in memory / disk
+Cache DataFrames & RDDs
+Send results back to Driver
+📌 Executors live for the entire job
+
+5️: Tasks, Stages & DAG (Execution Flow)
+-- DAG (Directed Acyclic Graph)
+A DAG is Spark’s execution plan that organizes data operations in the correct order for efficient processing.
+
+Key points (easy to remember):
+Directed → steps run in one direction
+Acyclic → no step runs in a loop
+Graph → operations are connected like a flowchart
+
+Created from your Spark transformations
+Optimized by Spark (Catalyst optimizer for SQL)
+
+-- Stages
+A group of tasks
+Separated by shuffle operations (e.g., groupBy, join)
+
+--Tasks
+Smallest unit of work
+Each task processes one data partition
+
+Example Execution Flow
+spark.read → filter → groupBy → write
+
+Driver builds DAG
+DAG split into stages
+Tasks created per partition
+Executors run tasks in parallel
+Results written to storage
+
+============================= Spark Architecture Diagram (Mental Model)
+
+| Component       | Role                |
+| --------------- | ------------------- |
+| Driver          | Controls execution  |
+| Cluster Manager | Allocates resources |
+| Worker Node     | Hosts executors     |
+| Executor        | Runs tasks          |
+| Task            | Processes partition |
+| Stage           | Group of tasks      |
+| DAG             | Execution plan      |
+
+
+================================= Spark Architecture with PySpark code
+--1: PySpark Code (Driver)
+
+from pyspark.sql import SparkSession
+spark = SparkSession.builder \
+    .appName("SparkArchitectureExample") \
+    .getOrCreate()
+
+
+-- What happens here (Architecture):
+Driver process starts
+SparkSession is created
+Driver talks to the Cluster Manager
+
+
+--2: Read Data (Lazy Transformation)
+
+df = spark.read.csv("s3://sales-data/orders.csv", header=True)
+
+Architecture view:
+Driver creates a DAG
+No execution yet (Spark is lazy)
+
+
+--3: Transformations (Build the DAG)
+
+filtered_df = df.filter(df.country == "US")
+grouped_df = filtered_df.groupBy("product").count()
+
+Architecture view:
+Driver adds nodes to the DAG
+DAG now looks like:
+Read → Filter → GroupBy
+-- Still no execution.
+
+
+--4: Action (Triggers Execution)
+
+grouped_df.show()
+
+Architecture view:
+DAG is finalized
+DAG is split into stages
+Stages are split into tasks
+Tasks are sent to executors
+
+--5: Executors Run Tasks (Parallel Work)
+
+On worker nodes, executors:
+Process data partitions
+Perform filter & aggregation
+Handle shuffles (groupBy causes shuffle)
+You don’t write executor code — Spark handles it automatically.
+
+--6: Write Output (Distributed Execution)
+
+grouped_df.write.mode("overwrite").parquet("s3://sales-data/output/")
+
+Architecture view:
+Executors write data in parallel
+One output file per partition
+
+
+================================= End-to-End Architecture Flow (Mapped to Code)
+| Architecture Component | PySpark Example                   |
+| ---------------------- | --------------------------------- |
+| Driver                 | Your Python script                |
+| DAG                    | `read → filter → groupBy → write` |
+| Stage                  | Before & after shuffle            |
+| Task                   | One partition of data             |
+| Executor               | Runs tasks                        |
+| Worker Node            | Hosts executors                   |
+| Cluster Manager        | Allocates CPU & memory            |
+
+================================= Mental Model (Very Important)
+PySpark Code
+   ↓
+Driver builds DAG
+   ↓
+DAG → Stages → Tasks
+   ↓
+Executors run tasks in parallel
+   ↓
+Results written to storage
+
+============================= Why do we use Spark.
+We use Spark to process large-scale data quickly and reliably using distributed, in-memory computation.
+
+1: Handles Big Data at Scale
+Processes GBs → TBs → PBs of data
+Runs across many machines (cluster)
+📌 Traditional tools can’t handle this volume efficiently.
+
+
+2: Very Fast Processing ⚡
+Uses in-memory computation
+Much faster than disk-based systems like Hadoop MapReduce
+📌 Ideal for large ETL jobs
+
+3: Supports Batch + Streaming
+Batch: daily/hourly data processing
+Streaming: real-time data (Kafka, events, logs)
+📌 One engine for both use cases.
+
+4: Easy to Use (High-Level APIs)
+Write code using PySpark, SQL, Scala
+No need to manage threads or machines manually
+📌 Data engineers focus on logic, not infrastructure.
+
+5:Fault Tolerant & Reliable
+Automatically retries failed tasks
+Uses DAG to recompute lost data
+📌 Handles node failures smoothly.
+
+6: Works with Modern Data Stack
+Integrates with S3, HDFS, Kafka, Hive, Delta Lake
+Used in data lakes & data warehouses
+
+
+
+
