@@ -248,6 +248,61 @@ Turning on the stove = action
 Spark only “cooks” when you ask for the result.
 
 
+============================================ Main Navigation Tabs of Databricks =========================================
+🏠 Home 
+Your starting dashboard
+Shows:
+  Recent notebooks
+  Quick actions (create notebook, SQL, job)
+Think of it as Databricks landing page
+
+
+📁 Workspace
+This is where you write and store code
+Contains:
+  Notebooks (PySpark, SQL, Scala)
+  Folders
+Most important tab for beginners
+📌 You’ll spend 80% of your time here as a data engineer.
+
+🕒 Recents
+Shows recently opened notebooks, queries, dashboards
+Just a shortcut — no core functionality
+
+🗂️ Catalog
+Part of Unity Catalog
+Manages:
+  Databases
+  Tables
+  Views
+Helps with data governance & organization
+📌 In Free Edition, this is mostly for viewing tables & schemas
+
+⚙️ Jobs & Pipelines
+Used to:
+  Schedule notebooks
+  Run ETL pipelines automatically
+Important for production workflows
+📌 In Free Edition, usage is limited, but concept is important for interviews.
+
+🖥️ Compute
+Where you manage clusters
+Clusters are needed to:
+  Run Spark code
+  Execute notebooks
+📌 No cluster = no Spark executio
+
+🛒 Marketplace
+Install:
+  Sample datasets
+  Connectors
+  Partner solutions
+Optional for learning
+
+
+
+
+
 
 
 
