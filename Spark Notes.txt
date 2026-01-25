@@ -300,16 +300,12 @@ Install:
 Optional for learning
 
 
+============================================ Distributed computing means =========================================
+=> Spark splits big data into smaller pieces and processes them in parallel across multiple machines.
 
+#================= Why Distributed Computing Is Needed
+Data is too big for one machine
+One CPU is too slow
+Systems can fail, so we need fault tolerance
 
-
-
-
-
-
-
-
-
-
-
-
+-- Spark solves all of this.
