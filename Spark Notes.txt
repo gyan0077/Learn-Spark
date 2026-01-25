@@ -1,10 +1,51 @@
-========================== What is Spark.
+# ========================== What is Spark
 Spark usually refers to Apache Spark, A powerful distributed data processing engine used to handle large-scale data quickly and efficiently.
 
-========================== What is Apache Spark?
+# ========================== What is Apache Spark
 Apache Spark is an open-source framework designed to process big data across clusters of computers. It is much faster than traditional systems like Hadoop MapReduce because it performs most computations in memory instead of repeatedly reading from disk.
 
-========================== High-Level Spark Architecture
+
+# ========================== What is Distributed computing  
+=> Spark splits big data into smaller pieces and processes them in parallel across multiple machines.
+
+# ========================== Why Distributed Computing Is Needed
+Data is too big for one machine
+One CPU is too slow
+Systems can fail, so we need fault tolerance
+-- Spark solves all of this.
+
+
+# ========================== Difference between Apache Spark and Hadoop.
+# What is Apache Spark?
+Apache Spark is a fast, in-memory distributed data processing engine.
+👉 It is mainly used to process data.
+
+Key points:
+Processes data in memory (very fast ⚡)
+Supports batch + streaming
+Easy APIs (PySpark, SQL, Scala)
+Used for ETL, analytics, ML
+📌 Think of Spark as the brain that computes data.
+
+# What is Hadoop?
+Apache Hadoop is a big-data ecosystem designed for storage + processing.
+👉 Hadoop is not one tool, it’s a collection:
+
+Main Hadoop Components:
+1️⃣ HDFS – distributed storage
+2️⃣ YARN – resource manager
+3️⃣ MapReduce – processing engine (old & slow)
+📌 Think of Hadoop as a big warehouse + basic processing system.
+
+# ========================== Simple Difference (One Line Each)
+Spark → Fast engine to process big data
+Hadoop → System to store and manage big data
+
+# Key Difference in attached image
+.
+.
+
+# ========================== High-Level Spark Architecture
 Client
   |
 Spark Driver (Driver Program)
@@ -300,12 +341,6 @@ Install:
 Optional for learning
 
 
-============================================ Distributed computing means =========================================
-=> Spark splits big data into smaller pieces and processes them in parallel across multiple machines.
 
-#================= Why Distributed Computing Is Needed
-Data is too big for one machine
-One CPU is too slow
-Systems can fail, so we need fault tolerance
 
--- Spark solves all of this.
+
