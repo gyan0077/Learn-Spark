@@ -42,8 +42,7 @@ Spark → Fast engine to process big data
 Hadoop → System to store and manage big data
 
 # Key Difference in attached image
-.
-.
+# img: Hadoop-MapReduce-vs-Apache-Spark
 
 # ========================== High-Level Spark Architecture
 Client
@@ -339,6 +338,7 @@ Install:
   Connectors
   Partner solutions
 Optional for learning
+
 
 
 
