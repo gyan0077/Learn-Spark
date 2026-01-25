@@ -1,0 +1,82 @@
+# ======================== What is a View in Databricks?
+A view is a saved query:
+❌ Does not store data
+✅ Always reflects latest data
+
+
+# ======================== Databricks 3 main types of views
+🔹 1️⃣ Temporary View (Session Scope)
+It Exists only in the current Spark session and It automatically deleted when notebook / session ends.
+
+-- When to use
+i)   Intermediate transformations
+ii)  ETL pipelines
+iii) Debugging
+
+-- How to create (PySpark)
+df.createOrReplaceTempView("temp_movies")
+
+-- How to query
+spark.sql("SELECT * FROM temp_movies").show()
+
+-- Key points
+i)  Not visible in Catalog
+ii) Not shared across notebooks
+iii) Very fast
+
+
+🔹 2️⃣ Global Temporary View (Cluster Scope)
+Shared across all notebooks, Exists as long as cluster is running.
+
+-- When to use
+i)  Share intermediate results across notebooks
+ii) Team experiments
+
+-- How to create (PySpark)
+df.createOrReplaceGlobalTempView("global_movies")
+
+-- How to query
+spark.sql("SELECT * FROM global_temp.global_movies").show()
+
+-- Key points
+i)   Schema is always global_temp
+ii)  Deleted when cluster stops
+iii) Not stored permanently
+
+🔹 3️⃣ Permanent View (Catalog View) ✅ (MOST IMPORTANT)
+Stored in Unity Catalog
+Persistent
+Shared across users & notebooks
+
+-- When to use
+i)   Analytics
+ii)  Reporting
+iii) Production queries
+
+-- How to create (SQL)
+CREATE OR REPLACE VIEW workspace.default.marvel_movies_view AS
+SELECT *
+FROM workspace.default.movies
+WHERE studio = 'Marvel Studios';
+
+-- How to query
+SELECT title, release_year
+FROM workspace.default.marvel_movies_view;
+
+-- Key points
+i)   Appears in Catalog
+ii)  Survives restarts
+iii) Slightly slower than temp views
+
+# =============================== View vs Table
+| View             | Table                 |
+| ---------------- | --------------------- |
+| Stores query     | Stores data           |
+| Lightweight      | Heavy                 |
+| Auto-updates     | Static unless updated |
+| Faster to create | Slower to create      |
+
+
+
+
+
