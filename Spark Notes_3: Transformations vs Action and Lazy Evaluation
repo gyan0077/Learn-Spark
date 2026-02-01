@@ -1,0 +1,112 @@
+============= 1️⃣ Transformations - (They build the plan)
+Transformations define what you want to do to the data.
+They do not execute immediately.
+
+============= 2️⃣ Actions - (They trigger execution)
+Actions ask Spark for a result.
+When an action is called, Spark executes the whole DAG.
+
+============= 3️⃣ Lazy Evaluation (Why Spark waits)
+Lazy evaluation means Spark waits until an action before doing any work.
+Note: Spark first records transformations, then optimizes, then executes once.
+
+============= Real-life analogy 🍳 =============
+Transformations = writing a recipe.
+Action = turning on the stove.
+Lazy evaluation = not cooking until someone orders food.
+
+=============================== Spark Transformations (Lazy – build the plan) =======================================
+Transformations define what to do. They don’t execute immediately.
+
+🔸 Narrow Transformations (NO shuffle)
+Data from one partition stays in the same partition.
+| -----------------------|-------------------------------------------- |
+| Transformation         | What it does                                |
+| ---------------------- | ------------------------------------------- |
+| `select()`             | Choose columns                              |
+| `filter()` / `where()` | Filter rows                                 |
+| `withColumn()`         | Add/modify column                           |
+| `drop()`               | Remove column                               |
+| `map()`                | Row-wise transform                          |
+| `flatMap()`            | Map + flatten                               |
+| `sample()`             | Sample rows                                 |
+| `limit()`              | Limit rows                                  |
+| `distinct()`           | Remove duplicates (can cause shuffle later) |
+
+
+
+🔸 Wide Transformations (Shuffle happens)
+Data must move across partitions.
+| Transformation         | What it does                        |
+| ---------------------- | ----------------------------------- |
+| `groupBy()`            | Group rows                          |
+| `agg()`                | Aggregations                        |
+| `join()`               | Combine DataFrames                  |
+| `repartition()`        | Change partitions                   |
+| `orderBy()` / `sort()` | Sort data                           |
+| `cube()` / `rollup()`  | Multi-dim aggregations              |
+| `coalesce()`           | Reduce partitions (no full shuffle) |
+
+
+🔹 Spark Actions (Eager – trigger execution)
+Actions trigger the execution of the entire DAG.
+| Action          | Result               |
+| --------------- | -------------------- |
+| `show()`        | Display rows         |
+| `count()`       | Row count            |
+| `collect()`     | Bring data to driver |
+| `take(n)`       | First `n` rows       |
+| `first()`       | First row            |
+| `foreach()`     | Apply function       |
+| `write()`       | Save to storage      |
+| `saveAsTable()` | Save as table        |
+| `reduce()`      | Aggregate values     |
+
+
+🔹 Transformations vs Actions (Quick Recall)
+| Aspect       | Transformation | Action          |
+| ------------ | -------------- | --------------- |
+| Execution    | Lazy           | Immediate       |
+| Builds DAG   | ✅              | ❌            |
+| Triggers job | ❌              | ✅            |
+| Output       | DataFrame      | Result / Output |
+
+
+======================== Eager transaformation ==========================
+Spark has NO eager transformations.
+All Spark transformations are lazy.
+Only actions are eager.
+
+========================= What is Fault Tolerance in Spark? =========================
+Fault tolerance means Spark can recover from failures (node, executor, task) without restarting the entire job or losing data.
+
+🔹 Types of Failures Spark Handles
+1️⃣ Executor failure (most common)
+2️⃣ Task failure
+3️⃣ Node failure
+4️⃣ Data loss in memory
+Spark handles all of these automatically.
+
+🔹 How Spark Achieves Fault Tolerance (Key Concepts)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
