@@ -18,7 +18,14 @@ Lazy evaluation = not cooking until someone orders food.
 =============================== Spark Transformations (Lazy – build the plan) =======================================
 Transformations define what to do. They don’t execute immediately.
 
-🔸 Narrow Transformations (NO shuffle)
+🔸 Narrow Transformations: 
+-- Each output partition depends on only ONE input partition (NO shuffle)
+
+What spark does:
+Partition 1 → Partition 1
+Partition 2 → Partition 2
+Partition 3 → Partition 3
+
 Data from one partition stays in the same partition.
 | -----------------------|-------------------------------------------- |
 | Transformation         | What it does                                |
@@ -31,11 +38,17 @@ Data from one partition stays in the same partition.
 | `flatMap()`            | Map + flatten                               |
 | `sample()`             | Sample rows                                 |
 | `limit()`              | Limit rows                                  |
-| `distinct()`           | Remove duplicates (can cause shuffle later) |
 
 
 
-🔸 Wide Transformations (Shuffle happens)
+🔸 Wide Transformations:
+-- Each output partition depends on MULTIPLE input partitions (Shuffle happens)
+
+What Spark does: 
+Partition 1 ─┐
+Partition 2 ─┼─► Shuffle ─► New Partitions
+Partition 3 ─┘
+
 Data must move across partitions.
 | Transformation         | What it does                        |
 | ---------------------- | ----------------------------------- |
@@ -45,7 +58,6 @@ Data must move across partitions.
 | `repartition()`        | Change partitions                   |
 | `orderBy()` / `sort()` | Sort data                           |
 | `cube()` / `rollup()`  | Multi-dim aggregations              |
-| `coalesce()`           | Reduce partitions (no full shuffle) |
 
 
 🔹 Spark Actions (Eager – trigger execution)
@@ -88,6 +100,39 @@ Fault tolerance means Spark can recover from failures (node, executor, task) wit
 Spark handles all of these automatically.
 
 🔹 How Spark Achieves Fault Tolerance (Key Concepts)
+1️⃣ DAG Lineage (MOST IMPORTANT)
+Spark does NOT replicate data like Hadoop. Instead, it remembers how data was created.
+This is called lineage.
+
+2️⃣ Task Re-execution:
+If a task fails:Spark retries it automatically,Runs the same task on another executor.
+Ex:
+Executor 2 crashes
+→ Spark reruns the same task on Executor 5
+
+3️⃣ Partition-Based Recovery:
+Spark processes data in partitions.
+If one partition is lost:
+Only that partition is recomputed
+Not the entire dataset
+📌 This makes recovery fast and efficient.
+
+
+=========================== 🔑 Golden Rule (Very Important)  ===========================
+If you see Exchange in .explain() → it is a WIDE transformation
+No Exchange → Narrow transformation.
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
