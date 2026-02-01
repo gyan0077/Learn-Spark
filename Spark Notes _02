@@ -76,6 +76,54 @@ iii) Slightly slower than temp views
 | Auto-updates     | Static unless updated |
 | Faster to create | Slower to create      |
 
+==================== Reading the spark plans with explain() ==============================
+-- .explain() is used to show how Spark plans to execute your query.
+
+Logical Plan → What you want to do (your query logic)
+Physical Plan → How Spark will actually do it (execution strategy)
+
+Think of it like this 👇
+📝 Logical plan = recipe
+🍳 Physical plan = cooking method
+
+=================== Logical Plans
+= Its types
+i)   Parsed Logical Plan    - Spark understands the syntax
+ii)  Analyzed Logical Plan  - Spark validates columns & tables
+iii) Optimized Logical Plan - Optimized by Catalyst Optimizer 
+
+=================== Physical Plan  (How Spark will actually execute it)
+Which join strategy?
+Will data shuffle?
+Will Spark use Photon, Broadcast, SortMerge?
+How many stages & tasks?
+
+==========================
+How Spark Converts Logical → Physical
+Code / SQL
+   ↓
+Parsed Logical Plan
+   ↓
+Analyzed Logical Plan
+   ↓
+Optimized Logical Plan (Catalyst)
+   ↓
+Physical Plan (Cost-based)
+   ↓
+Execution on cluster
+
+
+========Explanation: Spark first parses the query into a logical plan,
+resolves tables and columns in the analyzed plan,
+optimizes it using Catalyst rules,
+and finally generates a physical plan that executes efficiently using Photon with predicate pushdown and column pruning.
+
+
+
+
+
+
+
 
 
 
