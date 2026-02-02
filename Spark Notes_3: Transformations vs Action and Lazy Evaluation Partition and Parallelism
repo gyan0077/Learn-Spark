@@ -124,6 +124,55 @@ No Exchange → Narrow transformation.
 
 
 
+==========================  Partitions & Parallelism
+1️⃣ Partitions — How data is split.
+A partition is a chunk of data that Spark processes independently.
+DataFrames/RDDs are divided into partitions
+One task processes one partition
+
+========================== Why partitions matter
+They decide how many tasks Spark can run
+Too few → underutilized CPUs
+Too many → overhead (scheduling, small tasks)
+
+2️⃣ Parallelism — How much work runs at once
+Parallelism is the number of tasks running concurrently.
+Parallelism ≈ number of partitions being processed at the same time
+Bounded by available cores across executors
+
+========================== Rule of thumb
+Aim for 2–4× total cores as partitions for CPU-heavy jobs
+Example: 8 cores ⇒ ~16–32 partitions
+
+3️⃣ repartition() — Force a new partitioning (shuffle) 🚨
+repartition(n) reshuffles data to create exactly n partitions.
+
+========================== What it does
+i)    Wide transformation
+ii)   Full shuffle
+iii)  Useful to increase partitions or rebalance skew
+
+========================== When to use
+Before large joins/aggregations to improve parallelism
+After reading a small file that has too few partitions
+
+4️⃣ coalesce() vs repartition() (must-know)
+coalesce(n): reduces partitions without shuffle (narrow)
+repartition(n): changes partitions with shuffle (wide)
+Example: 
+df.coalesce(4)    # fast, no shuffle (reduce only)
+df.repartition(4) # shuffle (increase or rebalance)
+
+👍: Partitions: “Units of data Spark processes independently.“
+👍: Parallelism: “Number of tasks that can run concurrently.“
+👍: repartition(): “A wide transformation that reshuffles data to change partition count.“
+
+
+
+
+
+
+
 
 
 
