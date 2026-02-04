@@ -136,7 +136,7 @@ Medallion architecture organizes data into Bronze (raw), Silver (clean), and Gol
 
 
 ========================================== Unity Catalog in Databricks ==========================================
-Unity Catalog is Databricks’ central governance layer for data(Table View) and AI(Models) assets. 
+Unity Catalog is Databricks’ central governance(access control) layer for data(Table View) and AI(Models) assets. 
 It gives you one place to manage who can access what, audit usage, and secure data across all your workspaces—on top of Databricks (built on Apache Spark).
 
 ========================== What types Problems Unity Catalog Solves
