@@ -46,10 +46,11 @@ External tables are commonly Delta/Parquet on cloud storage
 Governance is handled via Catalog + Schema
 
 🎯 Interview-Ready One-Liner ⭐
-Managed tables are fully owned by Spark and deleting the table removes the data, while external tables store data outside Spark and dropping the table removes only metadata.
+Managed tables are fully owned by Spark and deleting the table removes the data, 
+while external tables store data outside Spark and dropping the table removes only metadata.
 
 
-===================== Medallion Architecture
+========================================== Medallion Architecture ==========================================
 Medallion Architecture is a data design pattern used in modern data platforms (popularized by Databricks)
 to organize data as it moves from raw → clean → business-ready.
 
@@ -131,6 +132,90 @@ Clear ownership between teams
 
 🎯 Interview-Ready One-Liner ⭐
 Medallion architecture organizes data into Bronze (raw), Silver (clean), and Gold (business-ready) layers to improve data quality, scalability, and maintainability.
+
+
+
+========================================== Unity Catalog in Databricks ==========================================
+Unity Catalog is Databricks’ central governance layer for data(Table View) and AI(Models) assets. 
+It gives you one place to manage who can access what, audit usage, and secure data across all your workspaces—on top of Databricks (built on Apache Spark).
+
+========================== What types Problems Unity Catalog Solves
+Before UC, teams struggled with:
+i)    Different permissions per workspace
+ii)   No single audit trail
+iii)  Hard-to-secure shared data
+-- Unity Catalog fixes this with centralized governance.
+
+========================== Core Building Blocks (Think “Folders → Files”)
+1️⃣ Metastore
+  The top-level container
+  Holds all catalogs for an account
+  Usually one metastore per region
+You don’t query the metastore directly—it organizes everything.
+
+2️⃣ Catalog
+Logical grouping of data by domain or team
+
+Examples: sales, finance, marketing
+CREATE CATALOG sales;
+
+3️⃣ Schema (Database)
+Groups related objects inside a catalog
+
+CREATE SCHEMA sales.raw;
+CREATE SCHEMA sales.analytics;
+
+4️⃣ Objects
+Tables, Views, Functions, Volumes
+
+CREATE TABLE sales.raw.orders (order_id INT,amount DOUBLE,country STRING);
+
+================================================================
+Example: End-to-End Structure
+Metastore
+ └── sales (catalog)
+     ├── raw (schema)
+     │    └── orders (table)
+     └── analytics (schema)
+          └── daily_revenue (view)
+
+
+============================= Access Control (The Big Win) 🔐
+Grant permissions at any level
+GRANT SELECT ON TABLE sales.raw.orders TO `analyst_group`;
+GRANT USE SCHEMA ON SCHEMA sales.raw TO `analyst_group`;
+
+============================= Row & Column Security (Real Example)
+-- Column masking
+ALTER TABLE sales.raw.orders
+ALTER COLUMN amount
+SET MASK amount_mask;
+
+-- Row filters
+CREATE ROW FILTER country_filter
+AS (country STRING) -> country = current_user();
+
+Analysts see only what they’re allowed—without duplicating tables.
+
+Data Lineage & Auditing 🧭
+Unity Catalog automatically tracks:
+  Where data came from
+  What transformed it
+  Who queried it
+
+%SQL
+DESCRIBE HISTORY sales.raw.orders;
+
+
+
+
+Interview-Ready One-Liner ⭐
+Unity Catalog is Databricks’ centralized governance solution that manages access control, 
+auditing, and lineage for data and AI assets across catalogs, schemas, and tables.
+
+
+
+
 
 
 
