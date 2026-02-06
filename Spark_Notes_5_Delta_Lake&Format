@@ -1,1 +1,59 @@
-5_
+========================= Delta Lake & Delta Format — Concepts  =========================
+Delta Lake is an open storage layer that brings reliability and performance to data lakes by adding a transaction log on top of Parquet files.
+
+🔹 What is Delta Lake?
+Delta Lake = Parquet files + transaction log + smart metadata
+
+🔹 What is Delta Format?
+Delta format is how data is stored:
+->  Actual data → Parquet files
+->  Metadata & history → _delta_log/ directory
+
+Delta Table
+ ├── part-0000.parquet
+ ├── part-0001.parquet
+ └── _delta_log/
+      ├── 000000.json
+      ├── 000001.json
+      └── ...
+
+🔹 Core Concepts of Delta Lake
+1️⃣ Transaction Log (_delta_log) ⭐ MOST IMPORTANT
+-> Records every change to the table
+-> Each commit creates a new version
+
+Version 0 → initial load
+Version 1 → append
+Version 2 → update
+
+2️⃣ ACID Transactions
+Delta Lake guarantees:
+Atomicity   – either all or nothing
+Consistency – before & after change should remain unchanged
+Isolation   – Transaction do not affect each other. (Multiple trx occur independently without interference)
+Durability –  Commit data will save permanently.
+
+3️⃣ Time Travel ⏳
+Query older versions of data.
+SELECT * FROM sales VERSION AS OF 5;
+
+or --> Python
+spark.read.format("delta") \
+  .option("versionAsOf", 5) \
+  .table("sales")
+--> Perfect for rollback & auditing.
+
+🎯 Interview-Ready One-Liners ⭐
+Delta Lake: “An open storage layer that adds ACID transactions, schema enforcement, and time travel to data lakes.”
+Delta Format: “Parquet files plus a transaction log that tracks all changes to a table.”
+
+
+
+
+
+
+
+
+
+
+
