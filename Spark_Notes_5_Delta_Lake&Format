@@ -48,6 +48,8 @@ Delta Lake: “An open storage layer that adds ACID transactions, schema enforce
 Delta Format: “Parquet files plus a transaction log that tracks all changes to a table.”
 
 
+==
+
 
 
 
