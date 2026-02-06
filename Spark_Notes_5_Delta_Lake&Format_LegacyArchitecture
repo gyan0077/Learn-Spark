@@ -1,0 +1,126 @@
+========================= Delta Lake & Delta Format — Concepts  =========================
+Delta Lake is an open storage layer that brings  ACID transactions Schema enforcement & time travel capablities to Data Lake.
+
+🔹 What is Delta Lake?
+Delta Lake = Parquet files + transaction log + smart metadata
+
+🔹 What is Delta Format?
+Delta format is how data is stored:
+->  Actual data → Parquet files
+->  Metadata & history → _delta_log/ directory
+
+Delta Table
+ ├── part-0000.parquet
+ ├── part-0001.parquet
+ └── _delta_log/
+      ├── 000000.json
+      ├── 000001.json
+      └── ...
+
+🔹 Core Concepts of Delta Lake
+1️⃣ Transaction Log (_delta_log) ⭐ MOST IMPORTANT
+-> Records every change to the table
+-> Each commit creates a new version
+
+Version 0 → initial load 
+Version 1 → append
+Version 2 → update
+
+2️⃣ ACID Transactions
+Delta Lake guarantees:
+Atomicity   – either all or nothing
+Consistency – before & after change should remain unchanged
+Isolation   – Transaction do not affect each other. (Multiple trx occur independently without interference)
+Durability –  Commit data will save permanently.
+
+3️⃣ Time Travel ⏳
+Query older versions of data.
+Select * from workspace.default.company_stocks version as of 0 where Company =  'Apple'
+Select * from workspace.default.company_stocks version as of 1 where Company =  'Apple'
+
+or --> Python
+spark.read.format("delta") \
+  .option("versionAsOf", 5) \
+  .table("sales")
+--> Perfect for rollback & auditing.
+
+🎯 Interview-Ready One-Liners ⭐
+Delta Lake: “An open storage layer that adds ACID transactions, schema enforcement, and time travel to data lakes.”
+Delta Format: “Parquet files plus a transaction log that tracks all changes to a table.”
+
+
+
+====================== S3 bucket setup& external Catalog=========================
+Step1: Create Amazon S3 bucket.
+Goto Home page of S3->Click Create Bucket-->Give bucket name unique-->Acknodgle and Create Bucket. -->Uplod data.
+
+upload doc
+
+Step 2: Set-up a externla location.
+Goto Catolog --> External data --> Create external Location --> AWS Quick Start --> Next(Give Bucket name)--> Generate New Token(Copy)-->Launch and quick start
+(enter token)--Create Stack(Acknowledge)
+
+
+Step3: Goto SQL Editor  and run below query.
+Select * from csv.`s3://gp-company-stocks-001`
+with (header = true,inferSchema = true)
+
+
+-- Creating the Delta table
+CREATE TABLE workspace.default.company_stocks
+USING Delta
+LOCATION 's3://gp-company-stocks-001/bronze/'
+AS
+SELECT
+*,
+current_timestamp as _ingested_at,
+input_file_name() as _source_file,
+uuid() as _bronze_id
+From 
+csv.`s3://gp-company-stocks-001/`
+with (header = true,inferSchema = true);
+
+
+-- To update few records and the chekc the version.
+--update workspace.default.company_stocks set Stock_Price = 70 where Company = 'Apple'
+  
+--Select * from workspace.default.company_stocks version as of 0 where Company =  'Apple'
+-- Select * from workspace.default.company_stocks version as of 1 where Company =  'Apple'
+
+============================================= Intro To Tech Architecture ==================================
+Once you GO thorough: project_ecommerce --> 1_setUp --> real_project (Code) the read below code for better understanding
+======= Data Understanding & upload
+Step: How to upload....
+Once you ecommerce Catalog created ---> Click on it Create Schema(Schema Name 'Source Data') 
+--> Click on (Schema which created 'Source Data') --> Click on Create Volume(Volume Name 'raw') 
+--> Click on upload to this volume(Uplod all the folders)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
