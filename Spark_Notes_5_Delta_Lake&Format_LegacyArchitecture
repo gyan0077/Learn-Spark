@@ -98,6 +98,21 @@ Once you ecommerce Catalog created ---> Click on it Create Schema(Schema Name 'S
 
 
 
+============================================= Raw ====>  Bronze  ==================================
+-- Transferring data from Raw to Bronze. and start working on Dimension Tables.
+Step1: Under our project "project_ecommerce" we will create a one more folder "1_Medallion_Processing_Dim". 
+and Under "1_Medallion_Processing_Dim" create a NoteBook "1_Dim_Bronze". 
+Under this Notebook whatever dimention we have we will create a Table under bronze layer.and we are ingesting the data.
+-- Check Code in "1_Dim_Bronze"
+
+
+
+
+
+
+
+
+
 
 
 
