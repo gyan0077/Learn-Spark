@@ -1,10 +1,12 @@
-========================= What are Managed and External Tables? =========================
+==== What are Managed and External Tables ====
 They differ by who owns the data files and what happens when you DROP the table.
 
 🔹 Managed Table (Spark manages EVERYTHING)
-========================= What it means ??
+It means: 
+
 Spark/Databricks manages both metadata AND data files.
-Data stored in Spark’s managed location
+
+Data stored in Spark’s managed location.
 If you DROP TABLE, data is deleted ❌
 
 -- How to create (SQL)
@@ -14,7 +16,8 @@ CREATE TABLE movies_managed (title STRING, studio STRING, revenue DOUBLE);
 df.write.saveAsTable("movies_managed")
 
 🔹 External Table (You manage the data)
-========================= What it means ??
+It means: 
+
 Spark manages only metadata, not data files.
 Data lives in external storage (S3, ADLS, GCS)
 If you DROP TABLE, data remains ✅
@@ -31,6 +34,7 @@ df.write \
 
 
 🔁 Managed vs External (Side-by-Side)
+
 | Feature        | Managed Table  | External Table         |
 | -------------- | -------------- | ---------------------- |
 | Data ownership | Spark          | You                    |
